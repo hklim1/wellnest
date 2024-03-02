@@ -36,16 +36,27 @@ const UpcomingAppointments = () => {
             </View>
             <View style={styles.dateStripContainer}>
                 {appointments &&
-                    appointments.slice(0, 3).map((app, idx) => {
-                        return (
-                            <DateStrip
-                                key={idx}
-                                active={idx == 0}
-                                date={app.formattedDate}
-                                title={app.title}
-                            />
-                        );
-                    })}
+                    appointments
+                        .filter((app) => {
+                            const todayDate = new Date();
+                            const appDate = new Date(app.date);
+                            const dateValues =
+                                `${todayDate.getMonth}_${todayDate.getDay()}` ==
+                                `${appDate.getMonth}_${appDate.getDay()}`;
+
+                            return dateValues;
+                        })
+                        .slice(0, 3)
+                        .map((app, idx) => {
+                            return (
+                                <DateStrip
+                                    key={idx}
+                                    active={idx == 0}
+                                    date={app.formattedDate.slice(0, 11)}
+                                    title={app.title}
+                                />
+                            );
+                        })}
                 <View
                     style={{
                         height: 60,
@@ -68,7 +79,7 @@ interface DateStripProps {
     title: string;
 }
 
-const DateStrip = ({ active, date, title }: DateStripProps) => {
+export const DateStrip = ({ active, date, title }: DateStripProps) => {
     const bgColor = active ? "#f4f4f4" : "";
     const ballSize = 16;
     const ballColor = active ? "#0FA6B0" : "#eeeeee";
