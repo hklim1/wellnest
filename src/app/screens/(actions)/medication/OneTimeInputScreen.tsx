@@ -61,7 +61,7 @@ const OneTimeInputScreen = () => {
               doseAmount
             );
             router.navigate("/screens/HomeScreen");
-            Toast.show("New symptom has been added", {
+            Toast.show("New medication has been added", {
               duration: Toast.durations.LONG,
               position: Toast.positions.BOTTOM,
             });

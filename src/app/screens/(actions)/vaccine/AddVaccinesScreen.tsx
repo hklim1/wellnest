@@ -1,10 +1,10 @@
 import { time } from "console";
 import React, { useState } from "react";
 import { Calendar } from "react-native-calendars";
-import ComponentDivider from "../../../components/ComponentDivider";
-import TextInputIcon from "../../../components/TextInputIcon";
+import ComponentDivider from "../../../../components/ComponentDivider";
+import TextInputIcon from "../../../../components/TextInputIcon";
 import DatePicker from "react-native-modern-datepicker";
-import { CancelSaveHeader } from "../../../components/CancelSaveHeader";
+import { CancelSaveHeader } from "../../../../components/CancelSaveHeader";
 import {
   SafeAreaView,
   View,
@@ -13,16 +13,16 @@ import {
   TextInput,
   Text,
 } from "react-native";
-import Symptoms from "../../../components/Symptoms";
-import { Feather } from "@expo/vector-icons";
+import Vaccines from "../../../../components/Vaccines";
+import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import dayjs from "dayjs";
 import { Button } from "@rneui/themed";
-import UserIconHeader from "../../../components/UserIconHeader";
-import { addSymptoms } from "../../utils/firebaseUtils";
+import UserIconHeader from "../../../../components/UserIconHeader";
+import { addVaccines } from "../../../utils/firebaseUtils";
 import uuid from "react-native-uuid";
 import Toast from "react-native-root-toast";
 
-const AddSymptomsScreen = () => {
+const AddVaccinesScreen = () => {
   const dayjs = require("dayjs");
   var utc = require("dayjs/plugin/utc");
   dayjs.extend(utc);
@@ -30,32 +30,24 @@ const AddSymptomsScreen = () => {
   const currentTime = dayjs(new Date()).format("h:mm A");
   const stringId = uuid.v4().toString();
 
-  const [openCalender, setOpenCalender] = useState(false);
+  const [openCalendar, setOpenCalendar] = useState(false);
   const [openTime, setOpenTime] = useState(false);
-  const [openSymptoms, setOpenSymptoms] = useState(false);
+  const [openVaccines, setOpenVaccines] = useState(false);
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState(currentTime);
   const [notes, setNotes] = useState("");
   const [accountId, setAccountId] = useState("");
-  const [activeSymptoms, setActiveSymptoms] = useState(new Set<string>());
-  console.log(activeSymptoms);
-  const stringSymptoms = Array.from(activeSymptoms).join(", ");
+  const [vaccines, setVaccines] = useState(new Set<string>());
+  const stringVaccines = Array.from(vaccines).join(", ");
 
   return (
     <SafeAreaView style={{ backgroundColor: "#eff4f4" }}>
       <ScrollView style={{ backgroundColor: "#eff4f4" }}>
         <CancelSaveHeader
-          titleName="Symptoms"
+          titleName="Vaccines"
           onSave={() => {
-            addSymptoms(
-              stringId,
-              accountId,
-              date,
-              time,
-              Array.from(activeSymptoms),
-              notes
-            );
-            Toast.show("New symptom has been added", {
+            addVaccines(stringId, accountId, Array.from(vaccines), date, notes);
+            Toast.show("New vaccine has been added", {
               duration: Toast.durations.LONG,
               position: Toast.positions.BOTTOM,
             });
@@ -63,14 +55,40 @@ const AddSymptomsScreen = () => {
         />
         <View style={styles.container}>
           <ComponentDivider>
+            <View style={styles.wrapper}>
+              <MaterialCommunityIcons name="needle" size={24} color="grey" />
+              <TextInput
+                cursorColor={"black"}
+                style={{ flex: 1, fontFamily: "Inter400", fontSize: 16 }}
+                placeholderTextColor="grey"
+                placeholder="Select Vaccine"
+                value={stringVaccines}
+                onPressIn={() => setOpenVaccines(!openVaccines)}
+              />
+            </View>
+            {openVaccines && (
+              <Vaccines
+                onAdd={(vaccine) => {
+                  vaccines.add(vaccine);
+                  setVaccines(vaccines);
+                }}
+                onRemove={(vaccine) => {
+                  vaccines.delete(vaccine);
+                  setVaccines(vaccines);
+                }}
+              />
+            )}
             <TextInputIcon
               name="calendar"
               placeholder="Date"
               value={dayjs(new Date(date)).format("ddd, MMM DD, YYYY")}
               // new Date(date).toUTCString().slice(0, 16).format("ddd, MMM DD, YYYY")}
-              onPressIn={() => setOpenCalender(true)}
+              onPressIn={() => {
+                setOpenCalendar(true);
+                setOpenVaccines(false);
+              }}
             />
-            {openCalender && (
+            {openCalendar && (
               <Calendar
                 // minDate={new Date().toDateString()}
                 markedDates={{
@@ -84,42 +102,7 @@ const AddSymptomsScreen = () => {
                 }}
                 onDayPress={(date) => {
                   setDate(new Date(date.dateString));
-                  setOpenCalender(false);
-                }}
-              />
-            )}
-            <TextInputIcon
-              name="clock"
-              placeholder="Time"
-              value={time}
-              onPressIn={() => setOpenTime(true)}
-            />
-            {openTime && (
-              <DatePicker
-                mode="time"
-                minuteInterval={5}
-                onTimeChange={(selectedTime) => {
-                  setTime(selectedTime);
-                  setOpenTime(false);
-                }}
-              />
-            )}
-            <TextInputIcon
-              name="frown"
-              placeholder="Symptoms"
-              value={stringSymptoms}
-              onPressIn={() => setOpenSymptoms(!openSymptoms)}
-              // onPressOut={() => setOpenSymptoms(false)}
-            />
-            {openSymptoms && (
-              <Symptoms
-                onAdd={(symptom) => {
-                  activeSymptoms.add(symptom);
-                  setActiveSymptoms(activeSymptoms);
-                }}
-                onRemove={(symptom) => {
-                  activeSymptoms.delete(symptom);
-                  setActiveSymptoms(activeSymptoms);
+                  setOpenCalendar(false);
                 }}
               />
             )}
@@ -159,7 +142,10 @@ const AddSymptomsScreen = () => {
               placeholderTextColor="grey"
               placeholder="Add a note"
               multiline={true}
-              onPressIn={() => setOpenSymptoms(false)}
+              onPressIn={() => {
+                setOpenVaccines(false);
+                setOpenCalendar(false);
+              }}
               onChangeText={(notes) => setNotes(notes)}
               // onPressOut={() => console.log(notes)}
             />
@@ -197,5 +183,13 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     // alignContent: "flex-start",
   },
+  wrapper: {
+    flexDirection: "row",
+    gap: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    backgroundColor: "white",
+    alignItems: "center",
+  },
 });
-export default AddSymptomsScreen;
+export default AddVaccinesScreen;

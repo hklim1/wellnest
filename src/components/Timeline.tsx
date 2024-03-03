@@ -1,7 +1,10 @@
 import { Text, View, StyleSheet, Pressable } from "react-native";
 import {
   Dependent,
+  Medication,
   Symptom,
+  Vaccination,
+  eventNote,
   useDependentIds,
   useDependents,
 } from "../app/utils/firebaseUtils";
@@ -34,24 +37,30 @@ const Timeline = ({ accountId }: TimelineProps) => {
   const dependentsIdsArray = useDependentIds(userId!);
   const dependents = useDependents(dependentsIdsArray);
 
-  const dependentSymptoms = dependents?.[accountId]?.["symptoms"] ?? {};
+  const dependentSymptoms =
+    dependents?.[accountId]?.symptoms ?? ({} as { [_: string]: Symptom });
+
+  const dependentMedications =
+    dependents?.[accountId]?.medications ?? ({} as { [_: string]: Medication });
+
+  const dependentVaccinations =
+    dependents?.[accountId]?.vaccines ?? ({} as { [_: string]: Vaccination });
+
+  const dependentNotes =
+    dependents?.[accountId]?.eventNotes ?? ({} as { [_: string]: eventNote });
 
   const timelineDict: {
     [date: string]: {
       type: string;
-      time: string;
-      activeSymptoms: string[];
+      time?: string;
+      description: string[];
     }[];
   } = {};
 
   let counter = 0;
 
-  // console.log(
-  //   "how many depenedents?",
-  //   Object.entries(dependentSymptoms).length
-  // );
-
-  for (const [symptomId, symptomInfo] of Object.entries(dependentSymptoms)) {
+  for (const symptomId in dependentSymptoms) {
+    const symptomInfo = dependentSymptoms[symptomId];
     // console.log(symptomId, symptomInfo);
     const seconds = symptomInfo.date.seconds;
     const secondsToDate = new Date(seconds * 1000);
@@ -61,14 +70,86 @@ const Timeline = ({ accountId }: TimelineProps) => {
       timelineDict[formattedDate].push({
         type: "Symptom(s)",
         time: symptomInfo["time"],
-        activeSymptoms: symptomInfo["activeSymptoms"] ?? [],
+        description: symptomInfo["activeSymptoms"] ?? [],
       });
     } else {
       timelineDict[formattedDate] = [
         {
           type: "Symptom(s)",
           time: symptomInfo["time"],
-          activeSymptoms: symptomInfo["activeSymptoms"] ?? [],
+          description: symptomInfo["activeSymptoms"] ?? [],
+        },
+      ];
+    }
+  }
+
+  for (const medicationId in dependentMedications) {
+    const medicationInfo = dependentMedications[medicationId];
+    const medicationName = [medicationInfo["name"]];
+
+    const seconds = medicationInfo.date.seconds;
+    const secondsToDate = new Date(seconds * 1000);
+    const formattedDate = dayjs(secondsToDate).format("ddd, MMM DD, YYYY");
+
+    if (formattedDate in timelineDict) {
+      timelineDict[formattedDate].push({
+        type: "Medication",
+        time: medicationInfo["time"],
+        description: medicationName ?? [],
+      });
+    } else {
+      timelineDict[formattedDate] = [
+        {
+          type: "Medication",
+          time: medicationInfo["time"],
+          description: medicationName ?? [],
+        },
+      ];
+    }
+  }
+
+  for (const vaccinationId in dependentVaccinations) {
+    const vaccinationInfo = dependentVaccinations[vaccinationId];
+    const vaccinationName = vaccinationInfo["selectedVaccines"];
+
+    const seconds = vaccinationInfo.date.seconds;
+    const secondsToDate = new Date(seconds * 1000);
+    const formattedDate = dayjs(secondsToDate).format("ddd, MMM DD, YYYY");
+
+    if (formattedDate in timelineDict) {
+      timelineDict[formattedDate].push({
+        type: "Vaccination",
+        description: vaccinationName ?? [],
+      });
+    } else {
+      timelineDict[formattedDate] = [
+        {
+          type: "Vaccination",
+          description: vaccinationName ?? [],
+        },
+      ];
+    }
+  }
+
+  for (const noteId in dependentNotes) {
+    const noteInfo = dependentNotes[noteId];
+    // console.log(symptomId, symptomInfo);
+    const seconds = noteInfo.date.seconds;
+    const secondsToDate = new Date(seconds * 1000);
+    const formattedDate = dayjs(secondsToDate).format("ddd, MMM DD, YYYY");
+
+    if (formattedDate in timelineDict) {
+      timelineDict[formattedDate].push({
+        type: "Note",
+        time: noteInfo["time"],
+        description: [noteInfo["noteTitle"]] ?? [],
+      });
+    } else {
+      timelineDict[formattedDate] = [
+        {
+          type: "Note",
+          time: noteInfo["time"],
+          description: [noteInfo["noteTitle"]] ?? [],
         },
       ];
     }
@@ -110,13 +191,24 @@ const Timeline = ({ accountId }: TimelineProps) => {
               let time = event.time;
               //   const time = dayjs(event.time).format("h:mm A");
               const type = event.type;
-              const symptoms = event.activeSymptoms;
+              const descriptions = event.description;
               let dotColor = "";
               if (type === "Symptom(s)") {
                 dotColor = "#D16D6A";
               }
-              if (time.length === 5) {
-                time = timeConvert(time);
+              if (type === "Medication") {
+                dotColor = "#ECB476";
+              }
+              if (type === "Vaccination") {
+                dotColor = "#8A7EBE";
+              }
+              if (type === "Note") {
+                dotColor = "#9DC284";
+              }
+              if (time) {
+                if (time.length === 5) {
+                  time = timeConvert(time);
+                }
               }
               return (
                 <View style={styles.contentContainer}>
@@ -124,17 +216,19 @@ const Timeline = ({ accountId }: TimelineProps) => {
                     <Icon name="circle" color={dotColor} size={15} />
                   </View>
                   <View style={styles.textContainer}>
-                    {symptoms.map((symptom) => {
+                    {descriptions.map((description) => {
                       return (
                         <View>
-                          <Text style={styles.symptomText}>{symptom}</Text>
+                          <Text style={styles.descriptionText}>
+                            {description}
+                          </Text>
                         </View>
                       );
                     })}
                     <Text style={styles.typeText}>{type}</Text>
                   </View>
                   <View style={styles.timeContainer}>
-                    <Text style={styles.symptomText}>{time}</Text>
+                    <Text style={styles.descriptionText}>{time}</Text>
                   </View>
                 </View>
               );
@@ -162,17 +256,17 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 7,
   },
+  descriptionText: {
+    fontFamily: "Inter400",
+    fontSize: 14,
+    color: "black",
+  },
   dotContainer: {
     width: 20,
     // borderColor: "green",
     // borderWidth: 2,
     marginRight: 8,
     marginTop: 3,
-  },
-  symptomText: {
-    fontFamily: "Inter400",
-    fontSize: 14,
-    color: "black",
   },
   textContainer: {
     width: "auto",

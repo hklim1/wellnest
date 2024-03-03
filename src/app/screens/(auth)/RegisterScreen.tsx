@@ -52,7 +52,6 @@ export default function RegisterScreen() {
       <ImageBackground
         source={require("../../../../assets/treeBackground.png")}
         style={styles.background}
-        // imageStyle={{ opacity: 0.3 }}
       >
         <Stack.Screen options={{ headerShown: false }} />
         <View style={styles.topHalf}>

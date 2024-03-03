@@ -13,12 +13,18 @@ const Symptoms = ({ onAdd, onRemove }: SymptomsProps) => {
   return (
     <ScrollView style={styles.background}>
       <View style={{ padding: 16 }}>
-        <Text
-          style={{ fontFamily: "Inter500", fontSize: 16, marginBottom: 10 }}
-        >
-          General
-        </Text>
         <View style={styles.category}>
+          <SymptomsButton
+            SymptomTitle="Bloating"
+            RightMargin={10}
+            onToggle={(isActive) => {
+              if (isActive) {
+                onAdd("Bloating");
+              } else {
+                onRemove("Bloating");
+              }
+            }}
+          />
           <SymptomsButton
             SymptomTitle="Chest Pain"
             RightMargin={10}
@@ -30,6 +36,8 @@ const Symptoms = ({ onAdd, onRemove }: SymptomsProps) => {
               }
             }}
           />
+        </View>
+        <View style={styles.category}>
           <SymptomsButton
             SymptomTitle="Chills/Shivering"
             RightMargin={10}
@@ -38,6 +46,17 @@ const Symptoms = ({ onAdd, onRemove }: SymptomsProps) => {
                 onAdd("Chills/Shivering");
               } else {
                 onRemove("Chills/Shivering");
+              }
+            }}
+          />
+          <SymptomsButton
+            SymptomTitle="Constipation"
+            RightMargin={0}
+            onToggle={(isActive) => {
+              if (isActive) {
+                onAdd("Constipation");
+              } else {
+                onRemove("Constipation");
               }
             }}
           />
@@ -55,6 +74,17 @@ const Symptoms = ({ onAdd, onRemove }: SymptomsProps) => {
             }}
           />
           <SymptomsButton
+            SymptomTitle="Diarrhea"
+            RightMargin={10}
+            onToggle={(isActive) => {
+              if (isActive) {
+                onAdd("Diarrhea");
+              } else {
+                onRemove("Diarrhea");
+              }
+            }}
+          />
+          <SymptomsButton
             SymptomTitle="Discharge"
             RightMargin={10}
             onToggle={(isActive) => {
@@ -65,6 +95,8 @@ const Symptoms = ({ onAdd, onRemove }: SymptomsProps) => {
               }
             }}
           />
+        </View>
+        <View style={styles.category}>
           <SymptomsButton
             SymptomTitle="Dizziness"
             RightMargin={10}
@@ -73,6 +105,28 @@ const Symptoms = ({ onAdd, onRemove }: SymptomsProps) => {
                 onAdd("Dizziness");
               } else {
                 onRemove("Dizziness");
+              }
+            }}
+          />
+          <SymptomsButton
+            SymptomTitle="Dry Mouth"
+            RightMargin={10}
+            onToggle={(isActive) => {
+              if (isActive) {
+                onAdd("Dry Mouth");
+              } else {
+                onRemove("Dry Mouth");
+              }
+            }}
+          />
+          <SymptomsButton
+            SymptomTitle="Ear Ringing"
+            RightMargin={0}
+            onToggle={(isActive) => {
+              if (isActive) {
+                onAdd("Ear Ringing");
+              } else {
+                onRemove("Ear Ringing");
               }
             }}
           />
@@ -101,6 +155,19 @@ const Symptoms = ({ onAdd, onRemove }: SymptomsProps) => {
             }}
           />
           <SymptomsButton
+            SymptomTitle="Gassiness"
+            RightMargin={10}
+            onToggle={(isActive) => {
+              if (isActive) {
+                onAdd("Gassiness");
+              } else {
+                onRemove("Gassiness");
+              }
+            }}
+          />
+        </View>
+        <View style={styles.category}>
+          <SymptomsButton
             SymptomTitle="Headache"
             RightMargin={10}
             onToggle={(isActive) => {
@@ -111,8 +178,41 @@ const Symptoms = ({ onAdd, onRemove }: SymptomsProps) => {
               }
             }}
           />
+          <SymptomsButton
+            SymptomTitle="Hearing Loss"
+            RightMargin={10}
+            onToggle={(isActive) => {
+              if (isActive) {
+                onAdd("Hearing Loss");
+              } else {
+                onRemove("Hearing Loss");
+              }
+            }}
+          />
         </View>
         <View style={styles.category}>
+          <SymptomsButton
+            SymptomTitle="Heartburn"
+            RightMargin={10}
+            onToggle={(isActive) => {
+              if (isActive) {
+                onAdd("Heartburn");
+              } else {
+                onRemove("Heartburn");
+              }
+            }}
+          />
+          <SymptomsButton
+            SymptomTitle="Itching"
+            RightMargin={10}
+            onToggle={(isActive) => {
+              if (isActive) {
+                onAdd("Itching");
+              } else {
+                onRemove("Itching");
+              }
+            }}
+          />
           <SymptomsButton
             SymptomTitle="Joint Pain"
             RightMargin={10}
@@ -124,19 +224,54 @@ const Symptoms = ({ onAdd, onRemove }: SymptomsProps) => {
               }
             }}
           />
+        </View>
+        <View style={styles.category}>
           <SymptomsButton
-            SymptomTitle="Muscle Fatigue"
+            SymptomTitle="Muscle Pain"
             RightMargin={10}
             onToggle={(isActive) => {
               if (isActive) {
-                onAdd("Muscle Fatigue");
+                onAdd("Muscle Pain");
               } else {
-                onRemove("Muscle Fatigue");
+                onRemove("Muscle Pain");
+              }
+            }}
+          />
+          <SymptomsButton
+            SymptomTitle="Nausea"
+            RightMargin={10}
+            onToggle={(isActive) => {
+              if (isActive) {
+                onAdd("Nausea");
+              } else {
+                onRemove("Nausea");
+              }
+            }}
+          />
+          <SymptomsButton
+            SymptomTitle="Rash"
+            RightMargin={0}
+            onToggle={(isActive) => {
+              if (isActive) {
+                onAdd("Rash");
+              } else {
+                onRemove("Rash");
               }
             }}
           />
         </View>
         <View style={styles.category}>
+          <SymptomsButton
+            SymptomTitle="Runny Nose"
+            RightMargin={10}
+            onToggle={(isActive) => {
+              if (isActive) {
+                onAdd("Runny Nose");
+              } else {
+                onRemove("Runny Nose");
+              }
+            }}
+          />
           <SymptomsButton
             SymptomTitle="Sneezing"
             RightMargin={10}
@@ -145,6 +280,43 @@ const Symptoms = ({ onAdd, onRemove }: SymptomsProps) => {
                 onAdd("Sneezing");
               } else {
                 onRemove("Sneezing");
+              }
+            }}
+          />
+        </View>
+        <View style={styles.category}>
+          <SymptomsButton
+            SymptomTitle="Sore Throat"
+            RightMargin={10}
+            onToggle={(isActive) => {
+              if (isActive) {
+                onAdd("Sore Throat");
+              } else {
+                onRemove("Sore Throat");
+              }
+            }}
+          />
+          <SymptomsButton
+            SymptomTitle="Stomachache"
+            RightMargin={10}
+            onToggle={(isActive) => {
+              if (isActive) {
+                onAdd("Stomachache");
+              } else {
+                onRemove("Stomachache");
+              }
+            }}
+          />
+        </View>
+        <View style={styles.category}>
+          <SymptomsButton
+            SymptomTitle="Stuffy Nose"
+            RightMargin={10}
+            onToggle={(isActive) => {
+              if (isActive) {
+                onAdd("Stuffy Nose");
+              } else {
+                onRemove("Stuffy Nose");
               }
             }}
           />
@@ -171,183 +343,9 @@ const Symptoms = ({ onAdd, onRemove }: SymptomsProps) => {
             }}
           />
         </View>
-        <Text
-          style={{ fontFamily: "Inter500", fontSize: 16, marginBottom: 10 }}
+        <View
+          style={{ display: "flex", flexDirection: "row", maxWidth: "100%" }}
         >
-          Ear/Nose/Throat
-        </Text>
-        <View style={styles.category}>
-          <SymptomsButton
-            SymptomTitle="Dry Mouth"
-            RightMargin={10}
-            onToggle={(isActive) => {
-              if (isActive) {
-                onAdd("Dry Mouth");
-              } else {
-                onRemove("Dry Mouth");
-              }
-            }}
-          />
-          <SymptomsButton
-            SymptomTitle="Ear Ringing"
-            RightMargin={0}
-            onToggle={(isActive) => {
-              if (isActive) {
-                onAdd("Ear Ringing");
-              } else {
-                onRemove("Ear Ringing");
-              }
-            }}
-          />
-        </View>
-        <View style={styles.category}>
-          <SymptomsButton
-            SymptomTitle="Hearing Loss"
-            RightMargin={10}
-            onToggle={(isActive) => {
-              if (isActive) {
-                onAdd("Hearing Loss");
-              } else {
-                onRemove("Hearing Loss");
-              }
-            }}
-          />
-          <SymptomsButton
-            SymptomTitle="Runny Nose"
-            RightMargin={0}
-            onToggle={(isActive) => {
-              if (isActive) {
-                onAdd("Runny Nose");
-              } else {
-                onRemove("Runny Nose");
-              }
-            }}
-          />
-        </View>
-        <View style={styles.category}>
-          <SymptomsButton
-            SymptomTitle="Sore Throat"
-            RightMargin={10}
-            onToggle={(isActive) => {
-              if (isActive) {
-                onAdd("Sore Throat");
-              } else {
-                onRemove("Sore Throat");
-              }
-            }}
-          />
-          <SymptomsButton
-            SymptomTitle="Stuffy Nose"
-            RightMargin={0}
-            onToggle={(isActive) => {
-              if (isActive) {
-                onAdd("Stuffy Nose");
-              } else {
-                onRemove("Stuffy Nose");
-              }
-            }}
-          />
-        </View>
-        <View style={styles.category}>
-          <SymptomsButton
-            SymptomTitle="Toothache"
-            RightMargin={10}
-            onToggle={(isActive) => {
-              if (isActive) {
-                onAdd("Toothache");
-              } else {
-                onRemove("Toothache");
-              }
-            }}
-          />
-        </View>
-        <Text
-          style={{ fontFamily: "Inter500", fontSize: 16, marginBottom: 10 }}
-        >
-          Gastrointestinal
-        </Text>
-        <View style={styles.category}>
-          <SymptomsButton
-            SymptomTitle="Bloating"
-            RightMargin={10}
-            onToggle={(isActive) => {
-              if (isActive) {
-                onAdd("Bloating");
-              } else {
-                onRemove("Bloating");
-              }
-            }}
-          />
-          <SymptomsButton
-            SymptomTitle="Diarrhea"
-            RightMargin={10}
-            onToggle={(isActive) => {
-              if (isActive) {
-                onAdd("Diarrhea");
-              } else {
-                onRemove("Diarrhea");
-              }
-            }}
-          />
-          <SymptomsButton
-            SymptomTitle="Constipation"
-            RightMargin={0}
-            onToggle={(isActive) => {
-              if (isActive) {
-                onAdd("Constipation");
-              } else {
-                onRemove("Constipation");
-              }
-            }}
-          />
-        </View>
-        <View style={styles.category}>
-          <SymptomsButton
-            SymptomTitle="Gassiness"
-            RightMargin={10}
-            onToggle={(isActive) => {
-              if (isActive) {
-                onAdd("Gassiness");
-              } else {
-                onRemove("Gassiness");
-              }
-            }}
-          />
-          <SymptomsButton
-            SymptomTitle="Heartburn"
-            RightMargin={10}
-            onToggle={(isActive) => {
-              if (isActive) {
-                onAdd("Heartburn");
-              } else {
-                onRemove("Heartburn");
-              }
-            }}
-          />
-          <SymptomsButton
-            SymptomTitle="Nausea"
-            RightMargin={0}
-            onToggle={(isActive) => {
-              if (isActive) {
-                onAdd("Nausea");
-              } else {
-                onRemove("Nausea");
-              }
-            }}
-          />
-        </View>
-        <View style={styles.category}>
-          <SymptomsButton
-            SymptomTitle="Stomachache"
-            RightMargin={10}
-            onToggle={(isActive) => {
-              if (isActive) {
-                onAdd("Stomachache");
-              } else {
-                onRemove("Stomachache");
-              }
-            }}
-          />
           <SymptomsButton
             SymptomTitle="Vomiting"
             RightMargin={0}
@@ -356,83 +354,6 @@ const Symptoms = ({ onAdd, onRemove }: SymptomsProps) => {
                 onAdd("Vomiting");
               } else {
                 onRemove("Vomiting");
-              }
-            }}
-          />
-        </View>
-        <Text
-          style={{ fontFamily: "Inter500", fontSize: 16, marginBottom: 10 }}
-        >
-          Skin
-        </Text>
-        <View style={styles.category}>
-          <SymptomsButton
-            SymptomTitle="Blister"
-            RightMargin={10}
-            onToggle={(isActive) => {
-              if (isActive) {
-                onAdd("Blister");
-              } else {
-                onRemove("Blister");
-              }
-            }}
-          />
-          <SymptomsButton
-            SymptomTitle="Burn"
-            RightMargin={10}
-            onToggle={(isActive) => {
-              if (isActive) {
-                onAdd("Burn");
-              } else {
-                onRemove("Burn");
-              }
-            }}
-          />
-          <SymptomsButton
-            SymptomTitle="Cut/Scrape"
-            RightMargin={0}
-            onToggle={(isActive) => {
-              if (isActive) {
-                onAdd("Cut/Scrape");
-              } else {
-                onRemove("Cut/Scrape");
-              }
-            }}
-          />
-        </View>
-        <View
-          style={{ display: "flex", flexDirection: "row", maxWidth: "100%" }}
-        >
-          <SymptomsButton
-            SymptomTitle="Dryness"
-            RightMargin={10}
-            onToggle={(isActive) => {
-              if (isActive) {
-                onAdd("Dryness");
-              } else {
-                onRemove("Dryness");
-              }
-            }}
-          />
-          <SymptomsButton
-            SymptomTitle="Itching"
-            RightMargin={10}
-            onToggle={(isActive) => {
-              if (isActive) {
-                onAdd("Itching");
-              } else {
-                onRemove("Itching");
-              }
-            }}
-          />
-          <SymptomsButton
-            SymptomTitle="Rash"
-            RightMargin={0}
-            onToggle={(isActive) => {
-              if (isActive) {
-                onAdd("Rash");
-              } else {
-                onRemove("Rash");
               }
             }}
           />

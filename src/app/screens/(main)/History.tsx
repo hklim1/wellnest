@@ -57,7 +57,7 @@ const History = () => {
         <View style={styles.icons}>
           <UserIconHeader onPress={(account) => setAccountId(account)} />
         </View>
-        <View style={{ marginTop: 16 }}>
+        <View style={{ marginVertical: 16 }}>
           <>
             <ListItem
               bottomDivider

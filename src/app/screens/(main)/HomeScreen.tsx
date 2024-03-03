@@ -18,7 +18,6 @@ const Home = () => {
       <Stack.Screen options={{ headerShown: false }} />
       <View style={styles.padding}>
         <Header />
-
         <View style={styles.weekCalendar}>
           <Text style={styles.calendarText}>Today</Text>
           <CalendarProvider date={day.toDateString()}>
@@ -54,14 +53,20 @@ const Home = () => {
         onOpen={() => setOpen(!open)}
         onClose={() => setOpen(!open)}
       >
-        <View style={styles.popup}>
+        <Pressable
+          style={styles.popup}
+          onPress={() => router.navigate("/screens/note/AddNoteScreen")}
+        >
           <Text style={styles.popupText}>Notes</Text>
           <Feather name="file-text" size={20} color="#0FA6B0" />
-        </View>
-        <View style={styles.popup}>
+        </Pressable>
+        <Pressable
+          style={styles.popup}
+          onPress={() => router.navigate("/screens/vaccine/AddVaccinesScreen")}
+        >
           <Text style={styles.popupText}>Vaccine</Text>
-          <Feather name="x" size={20} color="#0FA6B0" />
-        </View>
+          <MaterialCommunityIcons name="needle" size={20} color="#0FA6B0" />
+        </Pressable>
 
         <Pressable
           style={styles.popup}

@@ -5,6 +5,7 @@ import {
   Pressable,
   StyleSheet,
   Text,
+  Image,
   TextInput,
   View,
 } from "react-native";
@@ -24,7 +25,30 @@ export default function WelcomeScreen() {
       // imageStyle={{ opacity: 0.3 }}
     >
       <Stack.Screen options={{ headerShown: false }} />
-      <Text style={styles.logoName}>wellnest</Text>
+      <View style={styles.imgContainer}>
+        <View style={{ paddingBottom: 5 }}>
+          <Image
+            source={require("../../../../assets/wellnestLogo.png")}
+            style={{
+              height: 38,
+              width: 50,
+              resizeMode: "center",
+            }}
+          />
+        </View>
+        <Image
+          source={require("../../../../assets/wellnestName.png")}
+          style={{
+            height: 28,
+            width: 150,
+            resizeMode: "center",
+          }}
+        />
+        <Text style={{ fontSize: 16, fontFamily: "Inter400", paddingTop: 10 }}>
+          {" "}
+          A unified approach to family health
+        </Text>
+      </View>
       <View style={styles.buttonsContainer}>
         <Button
           style={{ width: "100%" }}
@@ -84,11 +108,21 @@ const styles = StyleSheet.create({
   //   top: 220,
   // },
   logoName: {
-    position: "absolute",
-    top: "40%",
-    fontSize: 40,
+    // position: "absolute",
+    // top: "40%",
+    // fontSize: 40,
     // fontWeight: "600",
-    fontFamily: "Inter600",
-    color: "#0FA6B0",
+    // fontFamily: "Inter600",
+    // color: "#0FA6B0",
+  },
+  imgContainer: {
+    height: 200,
+    width: "100%",
+    position: "absolute",
+    top: "32%",
+    // borderWidth: 2,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

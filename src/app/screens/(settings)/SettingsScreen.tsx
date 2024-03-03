@@ -80,10 +80,9 @@ const SettingsScreen = () => {
                 onPress={() => router.push("/screens/FamilyMembersScreen")}
               >
                 <ListItem
-                  bottomDivider
+                  // bottomDivider
                   containerStyle={{
-                    borderTopEndRadius: 10,
-                    borderTopStartRadius: 10,
+                    borderRadius: 10,
                     paddingHorizontal: 16,
                     paddingTop: 11,
                     paddingBottom: 12,
@@ -105,7 +104,7 @@ const SettingsScreen = () => {
                   </ListItem.Content>
                 </ListItem>
               </Pressable>
-              <Pressable
+              {/* <Pressable
                 onPress={() => router.push("/screens/AddDependentScreen")}
               >
                 <ListItem
@@ -125,7 +124,7 @@ const SettingsScreen = () => {
                     </ListItem.Title>
                   </ListItem.Content>
                 </ListItem>
-              </Pressable>
+              </Pressable> */}
             </>
           </View>
           <View style={{ marginTop: 20 }}>
@@ -269,6 +268,26 @@ const SettingsScreen = () => {
                   </ListItem.Title>
                 </ListItem.Content>
               </ListItem>
+              <Pressable>
+                <ListItem
+                  onPress={() => router.navigate("/screens/CreditScreen")}
+                  topDivider
+                  bottomDivider
+                  containerStyle={{
+                    paddingHorizontal: 16,
+                    paddingTop: 11,
+                    paddingBottom: 12,
+                  }}
+                >
+                  <ListItem.Content
+                    style={{ height: 21, padding: 0, margin: 0 }}
+                  >
+                    <ListItem.Title style={styles.listTitles}>
+                      Credit
+                    </ListItem.Title>
+                  </ListItem.Content>
+                </ListItem>
+              </Pressable>
               <ListItem
                 // bottomDivider
                 containerStyle={{
