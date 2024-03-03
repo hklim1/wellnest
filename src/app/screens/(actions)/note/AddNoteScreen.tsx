@@ -1,10 +1,10 @@
 import { time } from "console";
 import React, { useState } from "react";
 import { Calendar } from "react-native-calendars";
-import ComponentDivider from "../../../components/ComponentDivider";
-import TextInputIcon from "../../../components/TextInputIcon";
+import ComponentDivider from "../../../../components/ComponentDivider";
+import TextInputIcon from "../../../../components/TextInputIcon";
 import DatePicker from "react-native-modern-datepicker";
-import { CancelSaveHeader } from "../../../components/CancelSaveHeader";
+import { CancelSaveHeader } from "../../../../components/CancelSaveHeader";
 import {
   SafeAreaView,
   View,
@@ -12,17 +12,19 @@ import {
   ScrollView,
   TextInput,
   Text,
+  Pressable,
 } from "react-native";
-import Symptoms from "../../../components/Symptoms";
+import Symptoms from "../../../../components/Symptoms";
 import { Feather } from "@expo/vector-icons";
 import dayjs from "dayjs";
-import { Button } from "@rneui/themed";
-import UserIconHeader from "../../../components/UserIconHeader";
-import { addSymptoms } from "../../utils/firebaseUtils";
+import { Button, Icon } from "@rneui/themed";
+import UserIconHeader from "../../../../components/UserIconHeader";
+import { addEventNotes } from "../../../utils/firebaseUtils";
 import uuid from "react-native-uuid";
 import Toast from "react-native-root-toast";
+import { router } from "expo-router";
 
-const AddSymptomsScreen = () => {
+const AddNoteScreen = () => {
   const dayjs = require("dayjs");
   var utc = require("dayjs/plugin/utc");
   dayjs.extend(utc);
@@ -30,32 +32,23 @@ const AddSymptomsScreen = () => {
   const currentTime = dayjs(new Date()).format("h:mm A");
   const stringId = uuid.v4().toString();
 
-  const [openCalender, setOpenCalender] = useState(false);
+  const [noteTitle, setNoteTitle] = useState("");
+  const [openCalendar, setOpenCalendar] = useState(false);
   const [openTime, setOpenTime] = useState(false);
-  const [openSymptoms, setOpenSymptoms] = useState(false);
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState(currentTime);
   const [notes, setNotes] = useState("");
   const [accountId, setAccountId] = useState("");
-  const [activeSymptoms, setActiveSymptoms] = useState(new Set<string>());
-  console.log(activeSymptoms);
-  const stringSymptoms = Array.from(activeSymptoms).join(", ");
 
   return (
     <SafeAreaView style={{ backgroundColor: "#eff4f4" }}>
       <ScrollView style={{ backgroundColor: "#eff4f4" }}>
         <CancelSaveHeader
-          titleName="Symptoms"
+          titleName="Note"
           onSave={() => {
-            addSymptoms(
-              stringId,
-              accountId,
-              date,
-              time,
-              Array.from(activeSymptoms),
-              notes
-            );
-            Toast.show("New symptom has been added", {
+            addEventNotes(stringId, accountId, noteTitle, date, time, notes);
+            router.navigate("/screens/HomeScreen");
+            Toast.show("New note has been added", {
               duration: Toast.durations.LONG,
               position: Toast.positions.BOTTOM,
             });
@@ -64,13 +57,19 @@ const AddSymptomsScreen = () => {
         <View style={styles.container}>
           <ComponentDivider>
             <TextInputIcon
+              name="edit"
+              placeholder="Add title"
+              onChangeText={(text) => setNoteTitle(text)}
+              value={noteTitle}
+            />
+            <TextInputIcon
               name="calendar"
               placeholder="Date"
               value={dayjs(new Date(date)).format("ddd, MMM DD, YYYY")}
               // new Date(date).toUTCString().slice(0, 16).format("ddd, MMM DD, YYYY")}
-              onPressIn={() => setOpenCalender(true)}
+              onPressIn={() => setOpenCalendar(true)}
             />
-            {openCalender && (
+            {openCalendar && (
               <Calendar
                 // minDate={new Date().toDateString()}
                 markedDates={{
@@ -84,7 +83,7 @@ const AddSymptomsScreen = () => {
                 }}
                 onDayPress={(date) => {
                   setDate(new Date(date.dateString));
-                  setOpenCalender(false);
+                  setOpenCalendar(false);
                 }}
               />
             )}
@@ -104,25 +103,6 @@ const AddSymptomsScreen = () => {
                 }}
               />
             )}
-            <TextInputIcon
-              name="frown"
-              placeholder="Symptoms"
-              value={stringSymptoms}
-              onPressIn={() => setOpenSymptoms(!openSymptoms)}
-              // onPressOut={() => setOpenSymptoms(false)}
-            />
-            {openSymptoms && (
-              <Symptoms
-                onAdd={(symptom) => {
-                  activeSymptoms.add(symptom);
-                  setActiveSymptoms(activeSymptoms);
-                }}
-                onRemove={(symptom) => {
-                  activeSymptoms.delete(symptom);
-                  setActiveSymptoms(activeSymptoms);
-                }}
-              />
-            )}
           </ComponentDivider>
           <View
             style={{
@@ -134,7 +114,7 @@ const AddSymptomsScreen = () => {
               alignItems: "center",
               borderRadius: 10,
               height: "auto",
-              marginVertical: 10,
+              marginVertical: 12,
             }}
           >
             {/* <View style={{ padding: 10}}> */}
@@ -150,18 +130,20 @@ const AddSymptomsScreen = () => {
               style={{
                 flex: 1,
                 fontSize: 16,
-                height: 100,
+                height: 150,
                 fontFamily: "Inter400",
                 flexWrap: "wrap",
               }}
-              // value={}
+              value={notes}
               textAlignVertical={"top"}
               placeholderTextColor="grey"
               placeholder="Add a note"
               multiline={true}
-              onPressIn={() => setOpenSymptoms(false)}
+              onPressIn={() => {
+                setOpenCalendar(false);
+                setOpenTime(false);
+              }}
               onChangeText={(notes) => setNotes(notes)}
-              // onPressOut={() => console.log(notes)}
             />
           </View>
           <Text style={styles.bottomText}>This is for:</Text>
@@ -187,15 +169,54 @@ const styles = StyleSheet.create({
     height: "auto",
     paddingHorizontal: 16,
   },
+  //   doseButtons: {
+  //     height: 30,
+  //     width: 30,
+  //     borderRadius: 50,
+  //     padding: 0,
+  //   },
+  disabledButtons: {
+    display: "flex",
+    textAlign: "center",
+    textAlignVertical: "center",
+    paddingBottom: 4,
+    marginLeft: 0,
+    height: 32,
+    width: 32,
+    borderRadius: 50,
+    backgroundColor: "#EEF1F1",
+    color: "#6B6F6F",
+  },
+  doseButtons: {
+    display: "flex",
+    textAlign: "center",
+    textAlignVertical: "center",
+    paddingBottom: 4,
+    marginLeft: 0,
+    height: 32,
+    width: 32,
+    borderRadius: 50,
+    backgroundColor: "#0FA6B0",
+    color: "white",
+  },
   icons: {
-    // marginTop: 10,
-    // borderWidth: 2,
-    // borderColor: "blue",
     height: "auto",
-    // display: "flex",
     flexDirection: "row",
     flexWrap: "wrap",
-    // alignContent: "flex-start",
+  },
+  input: {
+    flex: 1,
+    fontSize: 16,
+    fontFamily: "Inter400",
+  },
+  wrapper: {
+    flexDirection: "row",
+    gap: 10,
+    paddingVertical: 6,
+    paddingHorizontal: 16,
+    backgroundColor: "white",
+    alignItems: "center",
   },
 });
-export default AddSymptomsScreen;
+
+export default AddNoteScreen;

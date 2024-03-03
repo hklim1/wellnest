@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { Link, Stack, router } from "expo-router";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { Button, Icon, ThemeProvider } from "@rneui/themed";
+import { Button, Icon, ThemeProvider, Image } from "@rneui/themed";
 import { AppTheme, useStyles } from "../../themes";
 import { firebaseApp, firebaseAuth } from "../../../../FirebaseConfig";
 import {
@@ -20,6 +20,8 @@ import {
 } from "firebase/auth";
 import { firebase } from "@react-native-firebase/auth";
 import { useUserId } from "../../utils/globalStorage";
+import { Feather } from "@expo/vector-icons";
+import { GoogleIcon } from "../../../../assets";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("test@test.com");
@@ -73,21 +75,133 @@ export default function LoginScreen() {
       <ImageBackground
         source={require("../../../../assets/treeBackground.png")}
         style={styles.background}
-        imageStyle={{ opacity: 0.4 }}
       >
         <Stack.Screen options={{ headerShown: false }} />
         <View style={styles.topHalf}>
           <Button
             buttonStyle={styles.backButton}
-            // disabledStyle={{ backgroundColor: "red " }}
             onPress={() => router.back()}
             title={"  "}
-            icon={<Icon name="chevron-left" color="#8c9292" size={30} />}
-            // iconPosition="left"
+            icon={<Feather name="chevron-left" color="#5A5E5E" size={24} />}
           />
           <Text style={styles.loginInfo}>Enter your login info</Text>
         </View>
         <View style={styles.container}>
+          <KeyboardAvoidingView behavior="padding">
+            <TextInput
+              value={email}
+              style={styles.input}
+              placeholder="Email address"
+              autoCapitalize="none"
+              onChangeText={(text) => setEmail(text)}
+            ></TextInput>
+            <TextInput
+              value={password}
+              secureTextEntry={true}
+              style={styles.input}
+              placeholder="Choose a password"
+              autoCapitalize="none"
+              onChangeText={(text) => setPassword(text)}
+            ></TextInput>
+            {loading ? (
+              <ActivityIndicator size="large" color="#0FA6B0" />
+            ) : (
+              <>
+                <Button
+                  disabled={email === "" || password === ""}
+                  title="Continue"
+                  titleStyle={{
+                    color: "white",
+                    // fontWeight: "300",
+                    fontSize: 16,
+                    fontFamily: "Inter400",
+                  }}
+                  onPress={signIn}
+                  style={{
+                    width: 350,
+                    marginLeft: 3,
+                    marginTop: 4,
+                  }}
+                ></Button>
+              </>
+            )}
+            <Text style={styles.subtext}>Forgot password?</Text>
+          </KeyboardAvoidingView>
+          <View style={{ flexDirection: "row", marginVertical: 30 }}>
+            <View
+              style={{
+                backgroundColor: "#999F9F",
+                height: 1,
+                flex: 1,
+                alignSelf: "center",
+              }}
+            />
+            <Text
+              style={{
+                color: "black",
+                alignSelf: "center",
+                paddingHorizontal: 10,
+                fontSize: 14,
+                fontFamily: "Inter400",
+              }}
+            >
+              or
+            </Text>
+            <View
+              style={{
+                backgroundColor: "#999F9F",
+                height: 1,
+                flex: 1,
+                alignSelf: "center",
+              }}
+            />
+          </View>
+          <Button
+            title="Continue with Google"
+            titleStyle={{
+              flex: 1,
+              color: "black",
+              fontFamily: "Inter500",
+              fontSize: 16,
+            }}
+            icon={
+              <Image
+                source={GoogleIcon}
+                style={{
+                  width: 20,
+                  height: 20,
+                }}
+              />
+            }
+            onPress={() => router.navigate("/screens/CreatePasswordScreen")}
+            buttonStyle={styles.googleButton}
+          ></Button>
+        </View>
+        <Text style={styles.policies}>
+          By continuing, you agree to Wellnest's{" "}
+          <Link
+            style={{
+              color: "#5A5E5E",
+              fontFamily: "Inter400",
+              textDecorationLine: "underline",
+            }}
+            href="screens/LoginScreen"
+          >
+            Terms & Conditions
+          </Link>{" "}
+          and{" "}
+          <Link
+            style={{
+              color: "#5A5E5E",
+              fontFamily: "Inter400",
+              textDecorationLine: "underline",
+            }}
+            href="screens/LoginScreen"
+          >
+            Privacy Policy
+          </Link>
+        </Text>
+        {/* <View style={styles.container}>
           <KeyboardAvoidingView behavior="padding">
             <TextInput
               value={email}
@@ -192,7 +306,7 @@ export default function LoginScreen() {
           >
             Privacy Policy
           </Link>
-        </Text>
+        </Text> */}
       </ImageBackground>
     </ThemeProvider>
   );
@@ -201,70 +315,76 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "flex-end",
     alignItems: "center",
+    padding: 16,
   },
   backButton: {
-    width: 50,
-    height: 50,
+    width: 45,
+    height: 45,
     borderRadius: 50,
-    backgroundColor: "#d3e7e9",
+    backgroundColor: "#B7E4E7",
+    padding: 0,
   },
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    alignContent: "center",
+    // alignItems: "center",
+    // justifyContent: "center",
     position: "absolute",
-    top: 200,
+    top: 168,
+    width: "100%",
   },
   googleButton: {
-    width: 350,
-    marginLeft: 3,
-    marginTop: 4,
+    width: "100%",
+    height: 50,
+    // marginLeft: 3,
+    // marginTop: 4,
     backgroundColor: "#f0f0f0",
     color: "black",
-    borderColor: "lightgrey",
+    borderColor: "#979B9B",
     borderWidth: 1,
   },
   input: {
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 10,
-    width: 350,
-    height: 46,
+    fontFamily: "Inter400",
+    fontSize: 16,
+    padding: 16,
+    width: "100%",
+    height: 50,
     borderWidth: 1,
     borderRadius: 8,
-    borderColor: "lightgrey",
-    backgroundColor: "white",
-    marginVertical: 4,
+    borderColor: "#979B9B",
+    backgroundColor: "#f0f0f0",
+    marginBottom: 10,
   },
   loginInfo: {
     position: "absolute",
-    top: 84,
-    fontSize: 16,
-    fontWeight: "400",
+    top: 76,
+    fontSize: 20,
+    // fontWeight: "400",
+    fontFamily: "Inter500",
   },
   policies: {
     width: 250,
-    color: "grey",
+    color: "#5A5E5E",
     textAlign: "center",
     paddingHorizontal: 10,
     fontSize: 12,
-    fontWeight: "300",
+    fontFamily: "Inter400",
+    // fontWeight: "300",
     position: "absolute",
     bottom: 50,
   },
   subtext: {
-    color: "grey",
-    fontSize: 15,
+    color: "#979B9B",
+    fontSize: 16,
+    fontFamily: "Inter400",
     alignSelf: "center",
-    marginTop: 20,
+    marginTop: 16,
   },
   topHalf: {
     position: "absolute",
-    top: 80,
-    left: 20,
+    top: 50,
+    left: 16,
     width: 300,
   },
 });
