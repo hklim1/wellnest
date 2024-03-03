@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "84722955941",
+    "project_id": "wellnest-49bc3",
+    "storage_bucket": "wellnest-49bc3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:84722955941:android:9487a72febc6fbfb633f4c",
+        "android_client_info": {
+          "package_name": "com.colab.wellnest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "84722955941-vnv3qivdmkm3dor2farkp49km9f03inn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCU48CLPCTlL7mkW42PRnCT7qOPuQBVSms"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "84722955941-vnv3qivdmkm3dor2farkp49km9f03inn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
