@@ -80,6 +80,7 @@ export default function FamilyMembersScreen() {
                         if (match) {
                             return (
                                 <MemberRow
+                                    key={index}
                                     name={dep.firstName}
                                     imageName={dep.icon}
                                     rightComponent={value}

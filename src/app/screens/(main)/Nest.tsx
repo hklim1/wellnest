@@ -39,6 +39,7 @@ const Nest = () => {
     const [loading, setLoading] = useState(false);
     const [appointments, setAppointments] = useState<AppointmentType[]>();
     const [medications, setMedications] = useState<JoinMeds[]>([]);
+    const [buttons, setButtons] = useState(false);
 
     useEffect(() => {
         setLoading(true);
@@ -128,10 +129,10 @@ const Nest = () => {
                         appointments
                             ?.filter(
                                 (app) =>
-                                    new Date().toUTCString().slice(0, 10) ==
-                                    new Date(app.date)
-                                        .toUTCString()
-                                        .slice(0, 10)
+                                    `${new Date().getMonth()}` +
+                                        `${new Date().getDay()}` ==
+                                    `${new Date(app.date).getMonth()}` +
+                                        `${new Date(app.date).getDay()}`
                             )
                             .map((app, index) => {
                                 return (
@@ -151,14 +152,15 @@ const Nest = () => {
                                     </View>
                                 );
                             })}
-                </View>
-                <View style={styles.btnRow}>
-                    <Button
-                        title='Rescheduled'
-                        style={styles.btn}
-                        buttonStyle={styles.btn}
-                    />
-                    <Button title='Attended' buttonStyle={styles.btn} />
+
+                    <View style={styles.btnRow}>
+                        <Button
+                            title='Rescheduled'
+                            style={styles.btn}
+                            buttonStyle={styles.btn}
+                        />
+                        <Button title='Attended' buttonStyle={styles.btn} />
+                    </View>
                 </View>
             </View>
 
