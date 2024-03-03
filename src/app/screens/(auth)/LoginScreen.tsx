@@ -43,7 +43,7 @@ export default function LoginScreen() {
       // const prettyResp = JSON.stringify(response, null, "\t");
       const newUserId = response["user"]["uid"];
       setUserId(newUserId);
-      // router.replace("screens/HomeScreen");
+      router.replace("screens/HomeScreen");
     } catch (error: any) {
       console.log(error);
       alert("Login failed: " + error.message);
