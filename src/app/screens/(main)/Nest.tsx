@@ -7,17 +7,23 @@ import {
 } from "react-native";
 import { Stack } from "expo-router";
 import { Feather, Ionicons } from "@expo/vector-icons";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Fragment } from "react";
 import Members from "../../../components/Members";
 import {
     getAppointments,
     getDependentIcons,
     getDependents,
+    getAllMedicationsForDependents,
+    getAllMeds,
+    Medication,
+    JoinMeds,
 } from "../../utils/firebaseUtils";
 import { Button } from "@rneui/themed";
 import { AppointmentType } from "../../../lib/appointments";
 import HeaderRight from "../../../components/HeaderRight";
 import { getUserId } from "../../utils/globalStorage";
+import { UserIcon } from "../../../components/UserIcons";
+
 const last = {
     id: "fakeID",
     name: "All",
@@ -32,6 +38,8 @@ const Nest = () => {
     const [dependents, setDependents] = useState({});
     const [loading, setLoading] = useState(false);
     const [appointments, setAppointments] = useState<AppointmentType[]>();
+    const [medications, setMedications] = useState<JoinMeds[]>([]);
+    const [buttons, setButtons] = useState(false);
 
     useEffect(() => {
         setLoading(true);
@@ -44,6 +52,15 @@ const Nest = () => {
                 console.log("============ result is", result);
                 if (result) {
                     setDependents({ ...result, LAST: last });
+
+                    // setMedications(meds as JoinMeds);
+
+                    const meds = await getAllMeds(id);
+                    if (meds) {
+                        console.log("MY Meds", meds);
+                        setMedications(meds as JoinMeds[]);
+                        console.log("meds exists");
+                    }
                 }
             } else {
                 console.warn("ID dont exist");
@@ -112,10 +129,10 @@ const Nest = () => {
                         appointments
                             ?.filter(
                                 (app) =>
-                                    new Date().toUTCString().slice(0, 10) ==
-                                    new Date(app.date)
-                                        .toUTCString()
-                                        .slice(0, 10)
+                                    `${new Date().getMonth()}` +
+                                        `${new Date().getDay()}` ==
+                                    `${new Date(app.date).getMonth()}` +
+                                        `${new Date(app.date).getDay()}`
                             )
                             .map((app, index) => {
                                 return (
@@ -135,14 +152,15 @@ const Nest = () => {
                                     </View>
                                 );
                             })}
-                </View>
-                <View style={styles.btnRow}>
-                    <Button
-                        title='Rescheduled'
-                        style={styles.btn}
-                        buttonStyle={styles.btn}
-                    />
-                    <Button title='Attended' buttonStyle={styles.btn} />
+
+                    <View style={styles.btnRow}>
+                        <Button
+                            title='Rescheduled'
+                            style={styles.btn}
+                            buttonStyle={styles.btn}
+                        />
+                        <Button title='Attended' buttonStyle={styles.btn} />
+                    </View>
                 </View>
             </View>
 
@@ -155,6 +173,82 @@ const Nest = () => {
                         color='black'
                     />
                 </View>
+                <View>
+                    <View style={styles.cardTop}>
+                        <Text>Name</Text>
+                        <Text>Time</Text>
+                        <Text>{"          "}</Text>
+                    </View>
+                    <View>
+                        {medications.map((meds, index) => {
+                            const { icon, ...rest } = meds;
+
+                            return (
+                                <View key={index}>
+                                    {Object.entries(rest).map(
+                                        ([medId, medData], index) => {
+                                            if (
+                                                medData &&
+                                                typeof medData === "object"
+                                            ) {
+                                                const color =
+                                                    index % 2
+                                                        ? "grey"
+                                                        : "white";
+                                                // Ensure medData is an object
+                                                return (
+                                                    <View
+                                                        key={medId}
+                                                        style={[
+                                                            styles.cardTop,
+                                                            {
+                                                                marginTop: 10,
+                                                                backgroundColor:
+                                                                    color,
+                                                            },
+                                                        ]}>
+                                                        <View
+                                                            style={{
+                                                                flexDirection:
+                                                                    "row",
+                                                                justifyContent:
+                                                                    "center",
+                                                            }}>
+                                                            <Text
+                                                                style={{
+                                                                    paddingLeft: 10,
+                                                                }}>
+                                                                {medData.name}
+                                                            </Text>
+                                                        </View>
+                                                        <Text>
+                                                            {medData.time}
+                                                        </Text>
+                                                        <Text>
+                                                            <Feather
+                                                                name='x'
+                                                                size={24}
+                                                                color='#E13F3F'
+                                                            />
+                                                            <Feather
+                                                                color='#0FA6B0'
+                                                                name='check'
+                                                                size={24}
+                                                            />
+                                                        </Text>
+                                                    </View>
+                                                );
+                                            } else {
+                                                // Handle the case when medData is not an object
+                                                return null;
+                                            }
+                                        }
+                                    )}
+                                </View>
+                            );
+                        })}
+                    </View>
+                </View>
             </View>
 
             <View style={styles.card}>
@@ -166,8 +260,95 @@ const Nest = () => {
                         color='black'
                     />
                 </View>
+                <View style={styles.cardTop}>
+                    <Text>Name</Text>
+                    <Text>Status</Text>
+                    <Text>Time</Text>
+                </View>
+                <View>
+                    {medications.map((meds, index) => {
+                        const { icon, ...rest } = meds;
 
-                <View style={[styles.cardTop, styles.editStrip]}>
+                        return (
+                            <View key={index}>
+                                {Object.entries(rest).map(
+                                    ([medId, medData], index) => {
+                                        if (
+                                            medData &&
+                                            typeof medData === "object"
+                                        ) {
+                                            const color =
+                                                index % 2 ? "grey" : "white";
+                                            // Ensure medData is an object
+                                            return (
+                                                <View
+                                                    key={medId}
+                                                    style={[
+                                                        styles.cardTop,
+                                                        {
+                                                            marginTop: 10,
+                                                            backgroundColor:
+                                                                color,
+                                                        },
+                                                    ]}>
+                                                    <View
+                                                        style={{
+                                                            flexDirection:
+                                                                "row",
+                                                            justifyContent:
+                                                                "center",
+                                                        }}>
+                                                        <UserIcon
+                                                            name={
+                                                                icon + "Circle"
+                                                            }
+                                                            width={24}
+                                                        />
+
+                                                        <Text
+                                                            style={{
+                                                                paddingLeft: 10,
+                                                            }}>
+                                                            {medData.name}
+                                                        </Text>
+                                                    </View>
+                                                    <Text>
+                                                        {
+                                                            [
+                                                                "Taken",
+                                                                "Skipped",
+                                                                "Archived",
+                                                            ][
+                                                                Math.floor(
+                                                                    Math.random() *
+                                                                        3
+                                                                )
+                                                            ]
+                                                        }
+                                                    </Text>
+                                                    <Text>{medData.time}</Text>
+                                                </View>
+                                            );
+                                        } else {
+                                            // Handle the case when medData is not an object
+                                            return null;
+                                        }
+                                    }
+                                )}
+                            </View>
+                        );
+                    })}
+                </View>
+
+                <View
+                    style={[
+                        styles.cardTop,
+                        {
+                            borderTopWidth: 1,
+                            borderTopColor: "#aaa",
+                            marginTop: 10,
+                        },
+                    ]}>
                     <Text style={styles.editText}>VIEW AND EDIT</Text>
                     <Feather name='chevron-right' size={24} color='#0FA6B0' />
                 </View>

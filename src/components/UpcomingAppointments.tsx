@@ -21,7 +21,16 @@ const UpcomingAppointments = () => {
     }, []);
 
     if (loading) {
-        return <ActivityIndicator size='large' />;
+        return (
+            <View
+                style={[
+                    styles.container,
+                    { justifyContent: "center", alignItems: "center" },
+                ]}>
+                <ActivityIndicator size='large' />
+                <Text>Loading Apointments</Text>
+            </View>
+        );
     }
     return (
         <View style={styles.container}>
@@ -105,6 +114,7 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         marginTop: 16,
         borderRadius: 10,
+        minHeight: 150,
     },
     text: {
         fontSize: 16,
