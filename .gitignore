@@ -49,3 +49,5 @@ yarn-error.*
 
 # Google Firebase Authentication Process
 #  > npx expo customize metro.config.js
+# Local Netlify folder
+.netlify

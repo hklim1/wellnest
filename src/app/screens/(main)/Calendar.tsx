@@ -181,7 +181,8 @@ const CalendarScreen = () => {
                               )
                     }
                     renderItem={({ item }) => {
-                        const userIcon = dependents[item.memberId].icon;
+                        const userIcon =
+                            dependents[item.memberId]?.icon || "member";
                         return (
                             <ListItem
                                 bottomDivider
