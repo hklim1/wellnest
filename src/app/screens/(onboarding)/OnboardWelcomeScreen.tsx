@@ -19,7 +19,6 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { Feather } from "@expo/vector-icons";
 import { GoogleIcon } from "../../../../assets";
 import ProgressBar from "../../../components/ProgressBar";
-// import Rocket from "../../../../assets/rocket.png";
 
 export default function OnboardWelcomeScreen() {
   return (
@@ -43,7 +42,9 @@ export default function OnboardWelcomeScreen() {
         </View>
         <Button
           titleStyle={{ fontFamily: "Inter500", fontSize: 16 }}
-          onPress={() => router.push("/screens/OnboardNameScreen")}
+          onPress={() => {
+            router.push("/screens/OnboardNameScreen");
+          }}
         >
           Get Started
         </Button>

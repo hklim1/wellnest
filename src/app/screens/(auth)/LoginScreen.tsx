@@ -22,19 +22,20 @@ import { firebase } from "@react-native-firebase/auth";
 import { useUserId } from "../../utils/globalStorage";
 import { Feather } from "@expo/vector-icons";
 import { GoogleIcon } from "../../../../assets";
+import { useUserOnboarded } from "../../utils/firebaseUtils";
 
 export default function LoginScreen() {
-  const [email, setEmail] = useState("test@test.com");
-  const [password, setPassword] = useState("123123");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const { userId, setUserId } = useUserId();
 
   const auth = firebaseAuth;
 
-  if (userId !== null) {
-    console.log("userId", userId);
-    router.replace("screens/HomeScreen");
-  }
+  // if (userId !== null) {
+  //   console.log("userId", userId);
+  //   router.replace("screens/HomeScreen");
+  // }
 
   const signIn = async () => {
     setLoading(true);
@@ -43,28 +44,15 @@ export default function LoginScreen() {
       // const prettyResp = JSON.stringify(response, null, "\t");
       const newUserId = response["user"]["uid"];
       setUserId(newUserId);
-      router.replace("screens/HomeScreen");
+      const onboardStatus = await useUserOnboarded(userId!);
+      if (onboardStatus === false) {
+        router.navigate("screens/OnboardWelcomeScreen");
+      } else {
+        router.navigate("screens/HomeScreen");
+      }
     } catch (error: any) {
       console.log(error);
       alert("Login failed: " + error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const signUp = async () => {
-    setLoading(true);
-    try {
-      const response = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      console.log(response);
-      // alert("Incorrect email or password")
-    } catch (error: any) {
-      console.log(error);
-      alert("Registration failed: " + error.message);
     } finally {
       setLoading(false);
     }
@@ -201,112 +189,6 @@ export default function LoginScreen() {
             Privacy Policy
           </Link>
         </Text>
-        {/* <View style={styles.container}>
-          <KeyboardAvoidingView behavior="padding">
-            <TextInput
-              value={email}
-              style={styles.input}
-              placeholder="Email address"
-              autoCapitalize="none"
-              onChangeText={(text) => setEmail(text)}
-            ></TextInput>
-            <TextInput
-              value={password}
-              secureTextEntry={true}
-              style={styles.input}
-              placeholder="Choose a password"
-              autoCapitalize="none"
-              onChangeText={(text) => setPassword(text)}
-            ></TextInput>
-            {loading ? (
-              <ActivityIndicator size="large" color="#0FA6B0" />
-            ) : (
-              <>
-                <Button
-                  disabled={email === "" || password === ""}
-                  title="Continue"
-                  titleStyle={{
-                    color: "white",
-                    fontWeight: "300",
-                    fontSize: 16,
-                  }}
-                  onPress={signIn}
-                  style={{
-                    width: 350,
-                    // marginLeft: 3,
-                    marginTop: 4,
-                  }}
-                ></Button>
-              </>
-            )}
-            <Text style={styles.subtext}>Forgot password?</Text>
-          </KeyboardAvoidingView>
-          <View style={{ flexDirection: "row", marginVertical: 30 }}>
-            <View
-              style={{
-                backgroundColor: "lightgrey",
-                height: 1,
-                flex: 1,
-                alignSelf: "center",
-              }}
-            />
-            <Text
-              style={{
-                color: "black",
-                alignSelf: "center",
-                paddingHorizontal: 10,
-                fontSize: 14,
-                fontWeight: "300",
-              }}
-            >
-              or
-            </Text>
-            <View
-              style={{
-                backgroundColor: "lightgrey",
-                height: 1,
-                flex: 1,
-                alignSelf: "center",
-              }}
-            />
-          </View>
-          <Button
-            title="Continue with Google"
-            titleStyle={{ color: "black", fontWeight: "300", fontSize: 16 }}
-            icon={
-              <Icon
-                name="mail"
-                color="lightgrey"
-                size={20}
-                style={{ paddingRight: 15 }}
-              />
-            }
-            onPress={() => router.push("/screens/CreatePasswordScreen")}
-            buttonStyle={styles.googleButton}
-          ></Button>
-        </View>
-        <Text style={styles.policies}>
-          By continuing, you agree to Wellnest's{" "}
-          <Link
-            style={{
-              color: "#0FA6B0",
-              textDecorationLine: "underline",
-            }}
-            href="screens/LoginScreen"
-          >
-            Terms & Conditions
-          </Link>{" "}
-          and{" "}
-          <Link
-            style={{
-              color: "#0FA6B0",
-              textDecorationLine: "underline",
-            }}
-            href="screens/LoginScreen"
-          >
-            Privacy Policy
-          </Link>
-        </Text> */}
       </ImageBackground>
     </ThemeProvider>
   );

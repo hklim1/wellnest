@@ -13,16 +13,19 @@ import { Button, Icon, Image, ThemeProvider, useTheme } from "@rneui/themed";
 import ProgressBar from "../../../components/ProgressBar";
 import DatePicker from "react-native-date-picker";
 import dayjs from "dayjs";
+import { useUserBirthday } from "../../utils/globalStorage";
 
 export default function OnboardBirthdayScreen() {
   const dayjs = require("dayjs");
   var utc = require("dayjs/plugin/utc");
   dayjs.extend(utc);
 
+  const [flag, setFlag] = useState(false);
   const [dateSelected, setDateSelected] = useState(false);
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState(new Date());
-  console.log(date);
+  const { birthday, setBirthday } = useUserBirthday();
+  const [stagedBirthday, setStagedBirthday] = useState(new Date());
 
   return (
     <View style={styles.background}>
@@ -38,6 +41,8 @@ export default function OnboardBirthdayScreen() {
               setDateSelected(true);
               setOpen(false);
               setDate(date);
+              setBirthday(date.toDateString());
+              setFlag(true);
             }}
             onCancel={() => {
               setOpen(false);
@@ -80,6 +85,7 @@ export default function OnboardBirthdayScreen() {
           <ProgressBar activeButton={3} />
         </View>
         <Button
+          disabled={flag === false}
           titleStyle={{ fontFamily: "Inter500", fontSize: 16 }}
           onPress={() => router.push("/screens/OnboardGenderScreen")}
         >

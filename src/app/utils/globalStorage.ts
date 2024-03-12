@@ -29,15 +29,38 @@ export const useDependentId = (dependentId: string) => {
   return { dependentId: returnedItem, setDependentId: setItem };
 };
 
-// export const getUserId = async () => await AsyncStorage.getItem("@userId");
-// export const useAllDependents = () => {
-//     const { getItem, setItem } = useAsyncStorage("@userId");
-//     const  [returnedItem, setReturnedItem] = useState<string | null>(null);
-//     useEffect(() => {
-//         const wait = async () => {
-//             setReturnedItem(await getItem())
-//         }
-//         wait();
-//     }, []);
-//     return { userId: returnedItem, setUserId: setItem };
-// };
+export const useUserFirstName = () => {
+  const { getItem, setItem } = useAsyncStorage("@firstName");
+  const [returnedItem, setReturnedItem] = useState<string | null>(null);
+  useEffect(() => {
+    const wait = async () => {
+      setReturnedItem(await getItem());
+    };
+    wait();
+  }, []);
+  return { firstName: returnedItem, setFirstName: setItem };
+};
+
+export const useUserBirthday = () => {
+  const { getItem, setItem } = useAsyncStorage("@birthday");
+  const [returnedItem, setReturnedItem] = useState<string | null>(null);
+  useEffect(() => {
+    const wait = async () => {
+      setReturnedItem(await getItem());
+    };
+    wait();
+  }, []);
+  return { birthday: returnedItem, setBirthday: setItem };
+};
+
+export const useUserGender = () => {
+  const { getItem, setItem } = useAsyncStorage("@gender");
+  const [returnedItem, setReturnedItem] = useState<string | null>(null);
+  useEffect(() => {
+    const wait = async () => {
+      setReturnedItem(await getItem());
+    };
+    wait();
+  }, []);
+  return { gender: returnedItem, setGender: setItem };
+};

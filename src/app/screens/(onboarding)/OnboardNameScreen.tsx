@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   KeyboardAvoidingView,
   StyleSheet,
@@ -9,30 +9,54 @@ import {
 import { router } from "expo-router";
 import { Button, Icon, Image, ThemeProvider, useTheme } from "@rneui/themed";
 import ProgressBar from "../../../components/ProgressBar";
+import { useUserFirstName } from "../../utils/globalStorage";
+import { AppTheme } from "../../themes";
 
 export default function OnboardWelcomeScreen() {
+  const [flag, setFlag] = useState(false);
+  const [stagedFirstName, setStagedFirstName] = useState<string>("");
+  const { firstName, setFirstName } = useUserFirstName();
+
+  useEffect(() => {
+    if (firstName !== null) {
+      setStagedFirstName(firstName);
+    }
+  }, [firstName]);
+
   return (
-    <View style={styles.background}>
-      <View style={styles.textAndImage}>
-        <Text style={styles.onboardText}>What is your name?</Text>
-        <TextInput
-          placeholder="Name"
-          placeholderTextColor="#b5b9b9"
-          style={styles.nameInput}
-        ></TextInput>
-      </View>
-      <View style={styles.bottomPortion}>
-        <View style={styles.progressBar}>
-          <ProgressBar activeButton={2} />
+    <ThemeProvider theme={AppTheme}>
+      <View style={styles.background}>
+        <View style={styles.textAndImage}>
+          <Text style={styles.onboardText}>What is your name?</Text>
+          <TextInput
+            placeholder="Name"
+            placeholderTextColor="#b5b9b9"
+            style={styles.nameInput}
+            onChangeText={(text) => {
+              setStagedFirstName(text);
+              setFlag(true);
+            }}
+            value={stagedFirstName}
+          />
         </View>
-        <Button
-          titleStyle={{ fontFamily: "Inter500", fontSize: 16 }}
-          onPress={() => router.push("/screens/OnboardBirthdayScreen")}
-        >
-          Next
-        </Button>
+        <View style={styles.bottomPortion}>
+          <View style={styles.progressBar}>
+            <ProgressBar activeButton={2} />
+          </View>
+          <Button
+            disabled={flag === false}
+            // disabledStyle={{ backgroundColor: "black" }}
+            titleStyle={{ fontFamily: "Inter500", fontSize: 16 }}
+            onPress={() => {
+              setFirstName(stagedFirstName);
+              router.push("/screens/OnboardBirthdayScreen");
+            }}
+          >
+            Next
+          </Button>
+        </View>
       </View>
-    </View>
+    </ThemeProvider>
   );
 }
 

@@ -13,6 +13,13 @@ import { Button, Icon, Image, ThemeProvider, useTheme } from "@rneui/themed";
 import ProgressBar from "../../../components/ProgressBar";
 import { Feather } from "@expo/vector-icons";
 import { UserIcon } from "../../../components/UserIcons";
+import {
+  useUserFirstName,
+  useUserBirthday,
+  useUserGender,
+  useUserId,
+} from "../../utils/globalStorage";
+import { editUser } from "../../utils/firebaseUtils";
 
 export default function OnboardIconScreen() {
   const allIcons = [
@@ -28,6 +35,12 @@ export default function OnboardIconScreen() {
     "lion",
   ];
   const [dIcon, setIcon] = useState("member");
+  const { userId, setUserId } = useUserId();
+  const { firstName, setFirstName } = useUserFirstName();
+  const { birthday, setBirthday } = useUserBirthday();
+  const { gender, setGender } = useUserGender();
+
+  let convertedBirthday = new Date(birthday!);
 
   return (
     <View style={styles.background}>
@@ -42,7 +55,11 @@ export default function OnboardIconScreen() {
             data={allIcons}
             renderItem={({ item }) => {
               return (
-                <Pressable onPress={() => setIcon(item)}>
+                <Pressable
+                  onPress={() => {
+                    setIcon(item);
+                  }}
+                >
                   <UserIcon
                     name={dIcon == item ? item + "Selected" : item + "Circle"}
                     width={50}
@@ -59,8 +76,12 @@ export default function OnboardIconScreen() {
           <ProgressBar activeButton={5} />
         </View>
         <Button
+          disabled={dIcon === "member"}
           titleStyle={{ fontFamily: "Inter500", fontSize: 16 }}
-          onPress={() => router.push("/screens/HomeScreen")}
+          onPress={() => {
+            editUser(userId!, firstName!, convertedBirthday!, gender!, dIcon!);
+            router.push("/screens/HomeScreen");
+          }}
         >
           Next
         </Button>
