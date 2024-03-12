@@ -201,22 +201,28 @@ const SettingsScreen = () => {
           <View style={{ marginTop: 20 }}>
             <Text style={styles.sectionTitles}>HELP</Text>
             <>
-              <ListItem
-                bottomDivider
-                containerStyle={{
-                  borderTopEndRadius: 10,
-                  borderTopStartRadius: 10,
-                  paddingHorizontal: 16,
-                  paddingTop: 11,
-                  paddingBottom: 12,
-                }}
+              <Pressable
+                onPress={() => router.navigate("/screens/OnboardWelcomeScreen")}
               >
-                <ListItem.Content style={{ height: 21, padding: 0, margin: 0 }}>
-                  <ListItem.Title style={styles.listTitles}>
-                    Help Center
-                  </ListItem.Title>
-                </ListItem.Content>
-              </ListItem>
+                <ListItem
+                  bottomDivider
+                  containerStyle={{
+                    borderTopEndRadius: 10,
+                    borderTopStartRadius: 10,
+                    paddingHorizontal: 16,
+                    paddingTop: 11,
+                    paddingBottom: 12,
+                  }}
+                >
+                  <ListItem.Content
+                    style={{ height: 21, padding: 0, margin: 0 }}
+                  >
+                    <ListItem.Title style={styles.listTitles}>
+                      Help Center
+                    </ListItem.Title>
+                  </ListItem.Content>
+                </ListItem>
+              </Pressable>
               <ListItem
                 // bottomDivider
                 containerStyle={{

@@ -11,7 +11,7 @@
       "baseUrl": "/wellnest"
     },
     "splash": {
-      "image": "./assets/splashing.png",
+      "image": "./assets/splashScreen.png",
       "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
