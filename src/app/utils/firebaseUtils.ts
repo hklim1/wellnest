@@ -11,6 +11,7 @@ import { firebaseDB } from "../../../FirebaseConfig";
 import { getUserId, useUserId } from "./globalStorage";
 import { useEffect, useState } from "react";
 import { AppointmentType } from "../../lib/appointments";
+// import ShortUniqueId from 'short-unique-id';
 
 export interface Symptom {
   activeSymptoms?: string[];
@@ -50,6 +51,30 @@ export interface eventNote {
   };
   time: string;
   notes: string;
+}
+
+export interface User {
+  email: string;
+  onboarded: boolean;
+  permissions: Object;
+  icon: string;
+  firstName: string;
+  dateOfBirth: string;
+  gender: string;
+  notes: string;
+  symptoms?: {
+    [symptomId: string]: Symptom;
+  };
+  appointments?: Object;
+  medications?: {
+    [medicationId: string]: Medication;
+  };
+  vaccines?: {
+    [vaccinationId: string]: Vaccination;
+  };
+  eventNotes?: {
+    [noteId: string]: eventNote;
+  };
 }
 
 export interface Dependent {
@@ -123,6 +148,16 @@ export const addFullPermissions = async (
   }
 };
 
+// export const addOnboardStatus = async (userId: string, _email: string) => {
+//   try {
+//     const userRef = doc(firebaseDB, "Users", userId);
+//     const resp = await setDoc(userRef, { onboarded: false }, {email: _email} );
+//     return resp;
+//   } catch (e) {
+//     console.log(e);
+//   }
+// };
+
 export const editDependent = async (
   dependentId: string,
   firstName: string,
@@ -138,6 +173,27 @@ export const editDependent = async (
       gender,
       notes,
       icon,
+    });
+    console.log("Dependent edited successfully.");
+  } catch (e) {
+    console.error("Error editing dependent:");
+  }
+};
+
+export const editUser = async (
+  userId: string,
+  firstName: string,
+  dateOfBirth: Date,
+  gender: string,
+  icon: string
+) => {
+  try {
+    await updateDoc(doc(firebaseDB, "Users", userId), {
+      firstName,
+      dateOfBirth,
+      gender,
+      icon,
+      onboarded: true,
     });
     console.log("Dependent edited successfully.");
   } catch (e) {
@@ -171,6 +227,36 @@ export const removeUserFromPermissions = async (
     }
   } catch (e) {
     console.error("Error removing user from permissions:");
+  }
+};
+
+export const useUser = async (userId: string) => {
+  try {
+    const userRef = doc(firebaseDB, "Users", userId);
+    const resp = await getDoc(userRef);
+    if (resp.exists()) {
+      const data = resp.data() as User;
+      return data;
+    } else {
+      console.log("No such document!");
+    }
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const useUserOnboarded = async (userId: string) => {
+  try {
+    const userRef = doc(firebaseDB, "Users", userId);
+    const resp = await getDoc(userRef);
+    if (resp.exists()) {
+      const data = resp.data().onboarded;
+      return data;
+    } else {
+      console.log("No such document!");
+    }
+  } catch (e) {
+    console.log(e);
   }
 };
 
@@ -287,6 +373,7 @@ export const storeUser = async (userId: string, email: string) => {
     const resp = await setDoc(doc(firebaseDB, "Users", userId), {
       email,
       permissions: {},
+      onboarded: false,
     });
     return resp;
   } catch (e) {

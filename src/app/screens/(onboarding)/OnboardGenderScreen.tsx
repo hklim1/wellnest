@@ -11,11 +11,13 @@ import { router } from "expo-router";
 import { Button, Icon, Image, ThemeProvider, useTheme } from "@rneui/themed";
 import ProgressBar from "../../../components/ProgressBar";
 import { Feather } from "@expo/vector-icons";
+import { useUserGender } from "../../utils/globalStorage";
 
 export default function OnboardGenderScreen() {
   const [male, setMale] = useState(false);
   const [female, setFemale] = useState(false);
   const [other, setOther] = useState(false);
+  const { gender, setGender } = useUserGender();
 
   return (
     <View style={styles.background}>
@@ -33,6 +35,7 @@ export default function OnboardGenderScreen() {
           }}
           onPress={() => {
             setMale(true);
+            setGender("male");
             setFemale(false);
             setOther(false);
           }}
@@ -63,6 +66,7 @@ export default function OnboardGenderScreen() {
           onPress={() => {
             setMale(false);
             setFemale(true);
+            setGender("female");
             setOther(false);
           }}
         >
@@ -95,6 +99,7 @@ export default function OnboardGenderScreen() {
             setMale(false);
             setFemale(false);
             setOther(true);
+            setGender("other");
           }}
         >
           <Text
@@ -118,6 +123,7 @@ export default function OnboardGenderScreen() {
           <ProgressBar activeButton={4} />
         </View>
         <Button
+          disabled={female === false && male === false && other === false}
           titleStyle={{ fontFamily: "Inter500", fontSize: 16 }}
           onPress={() => router.push("/screens/OnboardIconScreen")}
         >
