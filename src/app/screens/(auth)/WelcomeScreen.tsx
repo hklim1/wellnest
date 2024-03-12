@@ -44,7 +44,14 @@ export default function WelcomeScreen() {
             resizeMode: "center",
           }}
         />
-        <Text style={{ fontSize: 16, fontFamily: "Inter400", paddingTop: 10 }}>
+        <Text
+          style={{
+            fontSize: 16,
+            fontFamily: "Inter400",
+            paddingTop: 10,
+            color: "#1A1D1D",
+          }}
+        >
           {" "}
           A unified approach to family health
         </Text>
