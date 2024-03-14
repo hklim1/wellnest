@@ -7,12 +7,15 @@ import { useUser } from "../app/utils/firebaseUtils";
 
 const Header = () => {
   const { userId, setUserId } = useUserId();
+  const user = useUser(userId!);
+  const usersName = user?.firstName;
+  const usersIcon = user?.icon;
 
   return (
     <View style={styles.headerWrapper}>
       <View style={styles.welcomeWrapper}>
-        <UserIcon name="bearCircle" />
-        <Text style={styles.text}>Welcome Back, Maria!</Text>
+        <UserIcon name={`${usersIcon}Circle`} />
+        <Text style={styles.text}>{`Welcome Back, ${usersName}!`}</Text>
       </View>
       <HeaderRight />
     </View>
@@ -23,6 +26,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     fontFamily: "Inter600",
+    marginLeft: 4,
   },
   headerWrapper: {
     flexDirection: "row",
