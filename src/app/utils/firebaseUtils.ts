@@ -123,7 +123,6 @@ export const createDependent = async (
       icon,
     });
     const newDepId = resp["_key"]["path"]["segments"][1];
-    console.log(newDepId);
     addFullPermissions(userId, newDepId);
     return resp;
   } catch (e) {
@@ -174,7 +173,6 @@ export const editDependent = async (
       notes,
       icon,
     });
-    console.log("Dependent edited successfully.");
   } catch (e) {
     console.error("Error editing dependent:");
   }
@@ -195,7 +193,6 @@ export const editUser = async (
       icon,
       onboarded: true,
     });
-    console.log("Dependent edited successfully.");
   } catch (e) {
     console.error("Error editing dependent:");
   }
@@ -230,19 +227,29 @@ export const removeUserFromPermissions = async (
   }
 };
 
-export const useUser = async (userId: string) => {
-  try {
-    const userRef = doc(firebaseDB, "Users", userId);
-    const resp = await getDoc(userRef);
-    if (resp.exists()) {
-      const data = resp.data() as User;
-      return data;
-    } else {
-      console.log("No such document!");
-    }
-  } catch (e) {
-    console.log(e);
-  }
+// NO ASYNC CALL IN PARAMETERS FOR HOOK**
+export const useUser = (userId: string) => {
+  const [userData, setUserData] = useState<User | undefined>();
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const userRef = doc(firebaseDB, "Users", userId);
+        const resp = await getDoc(userRef);
+        if (resp.exists()) {
+          const data = resp.data() as User;
+          setUserData(data);
+        } else {
+          console.log("No such document!");
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getData();
+  }, [userId]);
+
+  return userData;
 };
 
 export const useUserOnboarded = async (userId: string) => {
