@@ -34,7 +34,7 @@ const TabLayout = () => {
                     title: "",
                     tabBarIcon: ({ focused }) => (
                         <TabBarIcon
-                            iconName='clock'
+                            iconName='archive'
                             focused={focused}
                             title='History'
                         />
