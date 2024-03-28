@@ -10,6 +10,18 @@ const UpcomingAppointments = () => {
     const [appointments, setAppointments] = useState<AppointmentType[]>([]);
     const [loading, setLoading] = useState(false);
 
+    const todayAppointments = appointments
+        .filter((app) => {
+            const todayDate = new Date();
+            const appDate = new Date(app.date);
+            const dateValues =
+                `${todayDate.getMonth}_${todayDate.getDay()}` ==
+                `${appDate.getMonth}_${appDate.getDay()}`;
+
+            return dateValues;
+        })
+        .slice(0, 3);
+
     useEffect(() => {
         const getData = async () => {
             setLoading(true);
@@ -43,29 +55,23 @@ const UpcomingAppointments = () => {
                     <View style={styles.newAppt}>+ Add</View>
                 </Link>
             </View>
+            <View style={styles.noAppts}>
+                <Text style={{ color: "gray" }}>
+                    You have no upcoming appointments!
+                </Text>
+            </View>
             <View style={styles.dateStripContainer}>
                 {appointments &&
-                    appointments
-                        .filter((app) => {
-                            const todayDate = new Date();
-                            const appDate = new Date(app.date);
-                            const dateValues =
-                                `${todayDate.getMonth}_${todayDate.getDay()}` ==
-                                `${appDate.getMonth}_${appDate.getDay()}`;
-
-                            return dateValues;
-                        })
-                        .slice(0, 3)
-                        .map((app, idx) => {
-                            return (
-                                <DateStrip
-                                    key={idx}
-                                    active={idx == 0}
-                                    date={app.formattedDate.slice(0, 11)}
-                                    title={app.title}
-                                />
-                            );
-                        })}
+                    todayAppointments.map((app, idx) => {
+                        return (
+                            <DateStrip
+                                key={idx}
+                                active={idx == 0}
+                                date={app.formattedDate.slice(0, 11)}
+                                title={app.title}
+                            />
+                        );
+                    })}
                 <View
                     style={{
                         height: 60,
@@ -155,6 +161,12 @@ const styles = StyleSheet.create({
         paddingHorizontal: 8,
         paddingVertical: 2,
         fontFamily: "Inter500",
+    },
+    noAppts: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 16,
     },
 });
 
