@@ -3,10 +3,24 @@ import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import { getAppointments } from "../app/utils/firebaseUtils";
 import { AppointmentType } from "../lib/appointments";
+import { Button } from "@rneui/themed";
+import { Link } from "expo-router";
 
 const UpcomingAppointments = () => {
     const [appointments, setAppointments] = useState<AppointmentType[]>([]);
     const [loading, setLoading] = useState(false);
+
+    const todayAppointments = appointments
+        .filter((app) => {
+            const todayDate = new Date();
+            const appDate = new Date(app.date);
+            const dateValues =
+                `${todayDate.getMonth}_${todayDate.getDay()}` ==
+                `${appDate.getMonth}_${appDate.getDay()}`;
+
+            return dateValues;
+        })
+        .slice(0, 3);
 
     useEffect(() => {
         const getData = async () => {
@@ -34,38 +48,30 @@ const UpcomingAppointments = () => {
     }
     return (
         <View style={styles.container}>
-            <View>
+            <View style={styles.apptHeader}>
                 <Text style={styles.text}>Upcoming Appointments</Text>
-                <Ionicons
-                    name='ellipsis-vertical'
-                    size={24}
-                    color='black'
-                    style={{ position: "absolute", right: 0 }}
-                />
+                <Link href='/screens/Appointments'>
+                    {" "}
+                    <View style={styles.newAppt}>+ Add</View>
+                </Link>
+            </View>
+            <View style={styles.noAppts}>
+                <Text style={{ color: "gray" }}>
+                    You have no upcoming appointments!
+                </Text>
             </View>
             <View style={styles.dateStripContainer}>
                 {appointments &&
-                    appointments
-                        .filter((app) => {
-                            const todayDate = new Date();
-                            const appDate = new Date(app.date);
-                            const dateValues =
-                                `${todayDate.getMonth}_${todayDate.getDay()}` ==
-                                `${appDate.getMonth}_${appDate.getDay()}`;
-
-                            return dateValues;
-                        })
-                        .slice(0, 3)
-                        .map((app, idx) => {
-                            return (
-                                <DateStrip
-                                    key={idx}
-                                    active={idx == 0}
-                                    date={app.formattedDate.slice(0, 11)}
-                                    title={app.title}
-                                />
-                            );
-                        })}
+                    todayAppointments.map((app, idx) => {
+                        return (
+                            <DateStrip
+                                key={idx}
+                                active={idx == 0}
+                                date={app.formattedDate.slice(0, 11)}
+                                title={app.title}
+                            />
+                        );
+                    })}
                 <View
                     style={{
                         height: 60,
@@ -116,6 +122,10 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         minHeight: 150,
     },
+    apptHeader: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+    },
     text: {
         fontSize: 16,
         textAlign: "center",
@@ -140,6 +150,22 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     dateStripContainer: {
+        marginTop: 16,
+    },
+    newAppt: {
+        // width: 30,
+        borderRadius: 100,
+        padding: 5,
+        backgroundColor: "#0FA6B0",
+        color: "white",
+        paddingHorizontal: 8,
+        paddingVertical: 2,
+        fontFamily: "Inter500",
+    },
+    noAppts: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
         marginTop: 16,
     },
 });
