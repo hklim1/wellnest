@@ -21,8 +21,13 @@ import {
   Inter_800ExtraBold,
   Inter_900Black,
 } from "@expo-google-fonts/inter";
+import { usePushNotifications } from "./hooks/usePushNotifications";
 
 export default function App() {
+  const { expoPushToken, notification } = usePushNotifications();
+
+  const data = JSON.stringify(notification, undefined, 2);
+
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
@@ -36,6 +41,8 @@ export default function App() {
     <SafeAreaProvider>
       {/* <ThemeProvider theme={AppTheme}> */}
       <WelcomeScreen />
+      <Text>Token: {expoPushToken?.data ?? ""}</Text>
+      <Text>{data}</Text>
       {/* redirect user to homescreen if they already exist */}
       {/* </ThemeProvider> */}
     </SafeAreaProvider>
